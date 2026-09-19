@@ -1,1 +1,560 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Sử - Địa - Công nghệ 12</title>
 
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    padding: 15px;
+}
+
+.header {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    padding: 25px 20px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 25px;
+}
+
+.header p {
+    margin: 0;
+    opacity: .9;
+}
+
+.question {
+    background: white;
+    padding: 18px;
+    margin-bottom: 14px;
+    border-radius: 16px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.06);
+}
+
+.subject {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4f46e5;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.question-text {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.45;
+    margin-bottom: 12px;
+}
+
+.option {
+    display: block;
+    border: 1px solid #e5e7eb;
+    border-radius: 11px;
+    padding: 12px;
+    margin: 8px 0;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.option:has(input:checked) {
+    background: #eef2ff;
+    border-color: #6366f1;
+}
+
+.option input {
+    margin-right: 8px;
+}
+
+.submit {
+    width: 100%;
+    border: none;
+    padding: 15px;
+    border-radius: 14px;
+    background: #4f46e5;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 5px 0 20px;
+}
+
+.result {
+    display: none;
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.score {
+    font-size: 36px;
+    font-weight: 800;
+}
+
+.review {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.wrong {
+    background: #fff5f5;
+    border-left: 4px solid #ef4444;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    line-height: 1.5;
+}
+
+.correct {
+    background: #f0fdf4;
+    border-left: 4px solid #22c55e;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+
+.retry {
+    width: 100%;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    background: #111827;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+    <h1>📝 Ôn tập Sử - Địa - Công nghệ 12</h1>
+    <p>20 câu trắc nghiệm • Chọn đáp án rồi nộp bài</p>
+</div>
+
+<div id="quiz"></div>
+
+<button class="submit" onclick="submitQuiz()">
+    Nộp bài
+</button>
+
+<div id="result" class="result"></div>
+
+</div>
+
+<script>
+
+const questions = [
+
+{
+subject: "Công nghệ",
+question: "Trong hệ thống cảnh báo tự động, bộ phận nào có nhiệm vụ phát hiện sự thay đổi của môi trường?",
+options: [
+"Cảm biến",
+"Thiết bị chấp hành",
+"Nguồn điện",
+"Thiết bị hiển thị"
+],
+answer: 0
+},
+
+{
+subject: "Công nghệ",
+question: "Trong một hệ thống sử dụng vi điều khiển, vi điều khiển có chức năng chủ yếu nào?",
+options: [
+"Lưu trữ điện năng",
+"Tiếp nhận và xử lí tín hiệu để điều khiển hệ thống",
+"Tạo ra năng lượng điện",
+"Thay thế hoàn toàn cảm biến"
+],
+answer: 1
+},
+
+{
+subject: "Công nghệ",
+question: "Thiết bị nào sau đây có thể là thiết bị chấp hành trong hệ thống cảnh báo?",
+options: [
+"Cảm biến nhiệt độ",
+"Còi báo",
+"Nút nhấn",
+"Dây dẫn"
+],
+answer: 1
+},
+
+{
+subject: "Công nghệ",
+question: "Trong dự án kĩ thuật, bước hình thành ý tưởng có mục đích chủ yếu là gì?",
+options: [
+"Xác định vấn đề và hướng giải pháp",
+"Mua tất cả linh kiện",
+"Viết báo cáo trước",
+"Chỉ chọn màu cho sản phẩm"
+],
+answer: 0
+},
+
+{
+subject: "Công nghệ",
+question: "Hệ thống nhúng thường được thiết kế để:",
+options: [
+"Soạn thảo văn bản",
+"Thực hiện một hoặc một nhóm chức năng chuyên biệt",
+"Chỉ lưu trữ hình ảnh",
+"Thay thế mọi loại máy tính"
+],
+answer: 1
+},
+
+{
+subject: "Công nghệ",
+question: "Trong robot tự hành, cảm biến có vai trò gì?",
+options: [
+"Nhận biết thông tin từ môi trường",
+"Chỉ làm đẹp robot",
+"Chỉ tăng khối lượng robot",
+"Không liên quan đến điều khiển"
+],
+answer: 0
+},
+
+{
+subject: "Công nghệ",
+question: "Một yêu cầu quan trọng khi lập kế hoạch cho dự án kĩ thuật là:",
+options: [
+"Xác định nhiệm vụ, tiến độ và nguồn lực",
+"Không cần phân công",
+"Chỉ ghi tên sản phẩm",
+"Chỉ xác định màu sắc"
+],
+answer: 0
+},
+
+{
+subject: "Địa lí",
+question: "Gió mùa mùa hạ ở Việt Nam có hướng chủ yếu nào?",
+options: [
+"Đông Bắc",
+"Tây Nam",
+"Tây Bắc",
+"Đông Bắc và Tây Bắc"
+],
+answer: 1
+},
+
+{
+subject: "Địa lí",
+question: "Gió mùa mùa đông ở Việt Nam hoạt động chủ yếu trong khoảng thời gian nào?",
+options: [
+"Tháng 5 đến tháng 10",
+"Tháng 11 đến tháng 4 năm sau",
+"Tháng 6 đến tháng 9",
+"Tháng 3 đến tháng 8"
+],
+answer: 1
+},
+
+{
+subject: "Địa lí",
+question: "Đặc điểm nổi bật của gió mùa Đông Bắc ở miền Bắc nước ta là:",
+options: [
+"Gây thời tiết lạnh, khô vào đầu mùa đông",
+"Luôn gây mưa lớn",
+"Luôn mang không khí nóng ẩm",
+"Chỉ xuất hiện ở Nam Bộ"
+],
+answer: 0
+},
+
+{
+subject: "Địa lí",
+question: "Gió mùa mùa hạ mang lại lượng mưa lớn cho nhiều khu vực nước ta chủ yếu vì:",
+options: [
+"Mang theo khối khí nóng ẩm",
+"Có nguồn gốc hoàn toàn từ lục địa khô",
+"Luôn thổi từ phía Bắc",
+"Không chịu ảnh hưởng địa hình"
+],
+answer: 0
+},
+
+{
+subject: "Địa lí",
+question: "Vào giữa và cuối mùa hạ, gió mùa Tây Nam ở nước ta có nguồn gốc chủ yếu từ:",
+options: [
+"Áp cao Xibia",
+"Khối khí từ Bắc Ấn Độ Dương và tín phong bán cầu Nam",
+"Châu Âu",
+"Đông Bắc Á"
+],
+answer: 1
+},
+
+{
+subject: "Địa lí",
+question: "Khu vực nào chịu ảnh hưởng rõ rệt của gió phơn Tây Nam vào mùa hạ?",
+options: [
+"Bắc Trung Bộ",
+"Đồng bằng sông Hồng",
+"Đông Bắc",
+"Tây Nam Bộ"
+],
+answer: 0
+},
+
+{
+subject: "Sử",
+question: "Một trong những nguyên nhân quan trọng dẫn tới sự sụp đổ của chế độ xã hội chủ nghĩa ở Liên Xô và Đông Âu là:",
+options: [
+"Cải cách đạt hiệu quả rất cao",
+"Những hạn chế, sai lầm kéo dài trong mô hình và quá trình cải cách",
+"Kinh tế phát triển ổn định",
+"Không chịu tác động của tình hình quốc tế"
+],
+answer: 1
+},
+
+{
+subject: "Sử",
+question: "Trong quá trình khủng hoảng, nền kinh tế Liên Xô gặp vấn đề nổi bật nào?",
+options: [
+"Tăng trưởng liên tục rất cao",
+"Trì trệ, khủng hoảng và hiệu quả sản xuất giảm",
+"Không có vấn đề",
+"Chỉ thiếu lao động"
+],
+answer: 1
+},
+
+{
+subject: "Sử",
+question: "Một tác động của sự sụp đổ hệ thống xã hội chủ nghĩa ở Đông Âu và Liên Xô là:",
+options: [
+"Trật tự thế giới hai cực Ianta suy yếu và tan rã",
+"Chiến tranh thế giới thứ hai bắt đầu",
+"Liên hợp quốc bị giải thể",
+"Mọi xung đột quốc tế chấm dứt"
+],
+answer: 0
+},
+
+{
+subject: "Sử",
+question: "Hội nghị Ianta được triệu tập trong bối cảnh nào?",
+options: [
+"Chiến tranh thế giới thứ hai sắp kết thúc",
+"Chiến tranh thế giới thứ nhất vừa bắt đầu",
+"Chiến tranh lạnh vừa kết thúc",
+"Liên hợp quốc đã giải thể"
+],
+answer: 0
+},
+
+{
+subject: "Sử",
+question: "Hội nghị Ianta diễn ra vào thời gian nào?",
+options: [
+"Tháng 2 năm 1945",
+"Tháng 9 năm 1939",
+"Tháng 8 năm 1945",
+"Tháng 5 năm 1955"
+],
+answer: 0
+},
+
+{
+subject: "Sử",
+question: "Ba cường quốc tham dự Hội nghị Ianta là:",
+options: [
+"Liên Xô, Mĩ, Anh",
+"Liên Xô, Pháp, Đức",
+"Mĩ, Nhật Bản, Anh",
+"Anh, Pháp, Trung Quốc"
+],
+answer: 0
+},
+
+{
+subject: "Sử",
+question: "Một trong những quyết định quan trọng của Hội nghị Ianta là:",
+options: [
+"Thành lập NATO",
+"Thống nhất tiêu diệt chủ nghĩa phát xít và tổ chức lại thế giới sau chiến tranh",
+"Chia châu Âu theo ngôn ngữ",
+"Khôi phục chế độ thuộc địa thế kỉ XIX"
+],
+answer: 1
+}
+
+];
+
+
+// Tạo câu hỏi
+const quiz = document.getElementById("quiz");
+
+questions.forEach((q, index) => {
+
+    const div = document.createElement("div");
+    div.className = "question";
+
+    let html = `
+        <div class="subject">
+            ${q.subject} • Câu ${index + 1}
+        </div>
+
+        <div class="question-text">
+            ${q.question}
+        </div>
+    `;
+
+    q.options.forEach((option, i) => {
+
+        html += `
+            <label class="option">
+                <input
+                    type="radio"
+                    name="question${index}"
+                    value="${i}"
+                >
+                <b>${String.fromCharCode(65 + i)}.</b>
+                ${option}
+            </label>
+        `;
+
+    });
+
+    div.innerHTML = html;
+    quiz.appendChild(div);
+
+});
+
+
+// Chấm điểm
+function submitQuiz() {
+
+    let score = 0;
+    let review = [];
+
+    questions.forEach((q, index) => {
+
+        const selected =
+            document.querySelector(
+                input[name="question${index}"]:checked
+            );
+
+        const chosen = selected
+            ? Number(selected.value)
+            : -1;
+
+        if (chosen === q.answer) {
+
+            score++;
+
+        } else {
+
+            let yourAnswer =
+                chosen === -1
+                ? "Chưa chọn"
+                : String.fromCharCode(65 + chosen) +
+                  ". " +
+                  q.options[chosen];
+
+            let correctAnswer =
+                String.fromCharCode(65 + q.answer) +
+                ". " +
+                q.options[q.answer];
+
+            review.push(`
+                <div class="wrong">
+                    <b>Câu ${index + 1}:</b><br>
+                    Bạn chọn: ${yourAnswer}<br>
+                    <b>Đáp án đúng:</b> ${correctAnswer}
+                </div>
+            `);
+
+        }
+
+    });
+
+
+    let message;
+
+    if (score >= 18) {
+        message = "🎉 Xuất sắc!";
+    } else if (score >= 15) {
+        message = "🔥 Rất tốt!";
+    } else if (score >= 10) {
+        message = "👍 Khá ổn!";
+    } else {
+        message = "📚 Ôn lại bài rồi thử lại nhé!";
+    }
+
+
+    const result = document.getElementById("result");
+
+    result.style.display = "block";
+
+    result.innerHTML = `
+        <div class="score">
+            ${score}/20
+        </div>
+
+        <h2>${message}</h2>
+
+        ${
+            review.length
+            ? `
+                <div class="review">
+                    <h3>📌 Các câu cần xem lại</h3>
+                    ${review.join("")}
+                </div>
+            `
+            : `
+                <div class="correct">
+                    🎉 Bạn đã đúng cả 20 câu!
+                </div>
+            `
+        }
+
+        <button class="retry" onclick="location.reload()">
+            Làm lại
+        </button>
+    `;
+
+
+    result.scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+</script>
+
+</body>
+</html>
